@@ -7,7 +7,7 @@ contract WrappedToken is ERC20 {
     address public vault;
 
     modifier onlyVault() {
-        require(msg.sender == vault, "Only Vault can call this");
+        require(msg.sender == vault, "Not authorized");
         _;
     }
 
@@ -15,13 +15,11 @@ contract WrappedToken is ERC20 {
         vault = _vault;
     }
 
-    // 🚀 Mint wrapped tokens (Vault only)
     function mint(address to, uint256 amount) external onlyVault {
         _mint(to, amount);
     }
 
-    // 🔥 Burn wrapped tokens (Vault only)
-    function burnFrom(address from, uint256 amount) external onlyVault {
+    function burn(address from, uint256 amount) external onlyVault {
         _burn(from, amount);
     }
 }
