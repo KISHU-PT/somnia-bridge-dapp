@@ -12,7 +12,7 @@ No relayers. No backend. Just smart contracts.
 
 🎬 Demo Video  
 
-\[!\[Watch the demo](https://img.shields.io/badge/Watch%20Demo-%F0%9F%93%BA-blue)](https://youtu.be/OUIPDk2HnT8)
+[Watch the demo](https://youtu.be/OUIPDk2HnT8)
 
 
 
