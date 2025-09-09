@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Somnia Simple Bridge</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Poppins&display=swap" rel="stylesheet">
+
+</head>
+<body>
+  <div class="container">
+    <h1>🌉 Somnia Bridge</h1>
+
+    <button id="connectBtn">🔌 Connect Wallet</button>
+    <p id="walletAddress">Not connected</p>
+
+    <div class="box">
+      <h3>🔐 Lock + Mint Wrapped Token</h3>
+      <input id="lockToken" placeholder="Token Address (ERC20)" />
+      <input id="lockAmount" placeholder="Amount to Lock" />
+      <button id="lockBtn">Bridge (Lock + Mint)</button>
+    </div>
+
+    <div class="box">
+      <h3>🔓 Burn Wrapped + Unlock</h3>
+      <input id="unlockToken" placeholder="Token Address (ERC20)" />
+      <input id="unlockAmount" placeholder="Amount to Unlock" />
+      <button id="unlockBtn">Unbridge (Burn + Unlock)</button>
+    </div>
+
+    <div class="log">
+      <h3>📜 TX Log</h3>
+      <pre id="logBox"></pre>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
