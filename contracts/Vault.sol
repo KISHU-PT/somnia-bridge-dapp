@@ -1,51 +1,30 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "./WrappedToken.sol";
+interface IERC20 {
+    function transferFrom(address from, address to, uint256 amount) external returns (bool);
+    function transfer(address to, uint256 amount) external returns (bool);
+}
+
+interface IWrappedToken {
+    function mint(address to, uint256 amount) external;
+    function burn(address from, uint256 amount) external;
+}
 
 contract Vault {
     address public owner;
-
-    // Mapping: original token => wrapped token
-    mapping(address => address) public wrappedTokens;
-
-    event Locked(address indexed user, address indexed token, uint256 amount);
-    event Unlocked(address indexed user, address indexed token, uint256 amount);
-
-    modifier onlyOwner() {
-        require(msg.sender == owner, "Not authorized");
-        _;
-    }
 
     constructor() {
         owner = msg.sender;
     }
 
-    // 🧱 Deploy a wrapped token for a given original token
-    function deployWrappedToken(address originalToken, string memory name, string memory symbol) external onlyOwner {
-        require(wrappedTokens[originalToken] == address(0), "Already exists");
-        WrappedToken wToken = new WrappedToken(name, symbol, address(this));
-        wrappedTokens[originalToken] = address(wToken);
+    function lock(address token, uint256 amount, address wrappedToken) external {
+        require(IERC20(token).transferFrom(msg.sender, address(this), amount), "Transfer failed");
+        IWrappedToken(wrappedToken).mint(msg.sender, amount);
     }
 
-    // 🔐 Lock original token and mint wrapped token
-    function lock(address token, uint256 amount) external {
-        require(wrappedTokens[token] != address(0), "No wrapped token for this");
-
-        IERC20(token).transferFrom(msg.sender, address(this), amount);
-        WrappedToken(wrappedTokens[token]).mint(msg.sender, amount);
-
-        emit Locked(msg.sender, token, amount);
-    }
-
-    // 🔓 Burn wrapped token and unlock original token
-    function unlock(address token, uint256 amount) external {
-        require(wrappedTokens[token] != address(0), "No wrapped token for this");
-
-        WrappedToken(wrappedTokens[token]).burnFrom(msg.sender, amount);
-        IERC20(token).transfer(msg.sender, amount);
-
-        emit Unlocked(msg.sender, token, amount);
+    function unlock(address token, uint256 amount, address wrappedToken) external {
+        IWrappedToken(wrappedToken).burn(msg.sender, amount);
+        require(IERC20(token).transfer(msg.sender, amount), "Transfer back failed");
     }
 }
